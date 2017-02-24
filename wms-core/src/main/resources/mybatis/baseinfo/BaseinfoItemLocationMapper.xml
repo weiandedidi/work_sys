@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lsh.wms.core.dao.baseinfo.BaseinfoItemLocationDao" >
+
+	<resultMap id="baseinfoItemLocationResultMap" type="BaseinfoItemLocation">
+		<id property="id" column="id"/>
+		<result property="pickLocationid" column="pick_locationid"/>
+		<result property="userstatus" column="userstatus"/>
+		<result property="itemId" column="item_id"/>
+		<result property="minQty" column="min_qty"/>
+		<result property="maxQty" column="max_qty"/>
+		<result property="pickLocationType" column="pick_location_type"/>
+	</resultMap>
+  
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="BaseinfoItemLocation">
+		insert into baseinfo_item_location (
+			pick_locationid,userstatus,item_id,pick_location_type,min_qty,max_qty
+    	) values (
+			#{pickLocationid},#{userstatus},#{itemId},#{pickLocationType},#{minQty},#{maxQty}
+    	)
+	</insert>
+
+	<update id="update" parameterType="BaseinfoItemLocation">
+		update baseinfo_item_location
+    	<set>
+  			<if test="pickLocationid != null">pick_locationid=#{pickLocationid},</if>
+  			<if test="userstatus != null">userstatus=#{userstatus},</if>
+			<if test="itemId != null">item_id=#{itemId},</if>
+			<if test="minQty != null">min_qty=#{minQty},</if>
+			<if test="maxQty != null">max_qty=#{maxQty},</if>
+			<if test="pickLocationType != null">pick_location_type=#{pickLocationType}</if>
+		</set>
+		where id=#{id}
+	</update>
+	<update id="updateByItemIdAndPicId" parameterType="BaseinfoItemLocation">
+		update baseinfo_item_location
+		<set>
+			<if test="pickLocationid != null">pick_locationid=#{pickLocationid},</if>
+			<if test="userstatus != null">userstatus=#{userstatus},</if>
+			<if test="itemId != null">item_id=#{itemId},</if>
+			<if test="minQty != null">min_qty=#{minQty},</if>
+			<if test="maxQty != null">max_qty=#{maxQty},</if>
+			<if test="pickLocationType != null">pick_location_type=#{pickLocationType}</if>
+		</set>
+		where pick_locationid=#{pickLocationid} and item_id=#{itemId}
+	</update>
+  
+	<select id="getBaseinfoItemLocationById" parameterType="long" resultMap="baseinfoItemLocationResultMap">
+		select * from baseinfo_item_location
+		where ID=#{id} 
+	</select>
+
+	<delete id="deleteItemLocation" parameterType="BaseinfoItemLocation">
+		delete from baseinfo_item_location
+		<where>
+			<if test="id != null">id=#{id}</if>
+			<if test="pickLocationid != null">and pick_locationid=#{pickLocationid}</if>
+			<if test="itemId != null">and item_id=#{itemId}</if>
+		</where>
+	</delete>
+  
+	<select id="countBaseinfoItemLocation" parameterType="map" resultType="int">
+		select count(*) from baseinfo_item_location
+		<include refid="queryCondition"/>
+	</select>
+  
+	<select id="getBaseinfoItemLocationList" parameterType="map" resultMap="baseinfoItemLocationResultMap">
+		select * from baseinfo_item_location
+		<include refid="queryCondition"/>
+		<if test="start != null and limit != null">
+		limit #{start},#{limit}
+		</if>
+	</select>
+  
+	<sql id="queryCondition">
+		<where>
+			<if test="id != null">id=#{id}</if>
+			<if test="pickLocationid != null">and pick_locationid=#{pickLocationid}</if>
+			<if test="userstatus != null">and userstatus=#{userstatus}</if>
+			<if test="itemId != null">and item_id=#{itemId}</if>
+			<if test="itemIds != null">
+				and item_id in
+				<foreach collection="itemIds" item="itemId" index="index" open="(" separator=","  close=")">
+					#{itemId}
+				</foreach>
+			</if>
+			<if test="minQty != null"> and min_qty=#{minQty}</if>
+			<if test="maxQty != null">and max_qty=#{maxQty}</if>
+			<if test="pickLocationType != null">and pick_location_type=#{pickLocationType}</if>
+		</where>
+	</sql>
+   
+</mapper>

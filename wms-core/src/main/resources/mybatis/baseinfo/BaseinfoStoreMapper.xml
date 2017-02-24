@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lsh.wms.core.dao.baseinfo.BaseinfoStoreDao" >
+
+	<resultMap id="baseinfoStoreResultMap" type="BaseinfoStore">
+		<id property="id" column="id"/>
+		<result property="storeNo" column="store_no"/>
+		<result property="storeName" column="store_name"/>
+		<result property="region" column="region"/>
+		<result property="scale" column="scale"/>
+		<result property="isOpen" column="is_open"/>
+		<result property="isValid" column="is_valid"/>
+		<result property="createAt" column="create_at"/>
+		<result property="updateAt" column="update_at"/>
+		<result property="address" column="address"/>
+		<result property="storeId" column="store_id"/>
+		<result property="seedQueue" column="seed_queue"/>
+	</resultMap>
+  
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="BaseinfoStore">
+		insert into baseinfo_store (
+			store_no,store_name,region,scale,is_open,is_valid,
+			create_at,update_at,address,store_id,seed_queue
+    	) values (
+			#{storeNo},#{storeName},#{region},#{scale},#{isOpen},#{isValid},
+			#{createAt},#{updateAt},#{address},#{storeId},#{seedQueue}
+    	)
+	</insert>
+
+	<update id="update" parameterType="BaseinfoStore">
+		update baseinfo_store
+    	<set>
+  			<if test="storeNo != null">store_no=#{storeNo},</if>
+  			<if test="storeName != null">store_name=#{storeName},</if>
+  			<if test="region != null">region=#{region},</if>
+  			<if test="scale != null">scale=#{scale},</if>
+  			<if test="isOpen != null">is_open=#{isOpen},</if>
+  			<if test="isValid != null">is_valid=#{isValid},</if>
+  			<if test="createAt != null">create_at=#{createAt},</if>
+  			<if test="updateAt != null">update_at=#{updateAt},</if>
+  			<if test="address != null">address=#{address},</if>
+  			<if test="storeId != null">store_id=#{storeId},</if>
+			<if test="seedQueue != null">seed_queue=#{seedQueue}</if>
+		</set>
+		where store_no=#{storeNo}
+	</update>
+  
+	<select id="getBaseinfoStoreById" parameterType="int" resultMap="baseinfoStoreResultMap">
+		select * from baseinfo_store
+		where store_no=#{storeNo}
+	</select>
+  
+	<select id="countBaseinfoStore" parameterType="map" resultType="int">
+		select count(*) from baseinfo_store
+		<include refid="queryCondition"/>
+	</select>
+  
+	<select id="getBaseinfoStoreList" parameterType="map" resultMap="baseinfoStoreResultMap">
+		select * from baseinfo_store
+		<include refid="queryCondition"/>
+		  ORDER BY  seed_queue DESC
+		<if test="start != null and limit != null">
+		limit #{start},#{limit}
+		</if>
+	</select>
+  
+	<sql id="queryCondition">
+		<where>
+			<if test="id != null">id=#{id}</if>
+			<if test="storeNo != null">and store_no=#{storeNo}</if>
+			<if test="storeName != null">and store_name like CONCAT('%',#{storeName},'%' )</if>
+			<if test="region != null">and region=#{region}</if>
+			<if test="scale != null">and scale=#{scale}</if>
+			<if test="isOpen != null">and is_open=#{isOpen}</if>
+			<if test="isValid != null">and is_valid=#{isValid}</if>
+			<if test="createAt != null">and create_at=#{createAt}</if>
+			<if test="updateAt != null">and update_at=#{updateAt}</if>
+			<if test="address != null">and address=#{address}</if>
+			<if test="storeId != null">and store_id=#{storeId}</if>
+			<if test="seedQueue != null">and seed_queue=#{seedQueue}</if>
+		</where>
+	</sql>
+   
+</mapper>

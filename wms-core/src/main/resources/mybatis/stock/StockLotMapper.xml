@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lsh.wms.core.dao.stock.StockLotDao" >
+
+	<resultMap id="stockLotResultMap" type="StockLot">
+		<id property="id" column="id"/>
+		<result property="lotId" column="lot_id"/>
+		<result property="skuId" column="sku_id"/>
+		<result property="serialNo" column="serial_no"/>
+		<result property="inDate" column="in_date"/>
+		<result property="productDate" column="product_date"/>
+		<result property="expireDate" column="expire_date"/>
+		<result property="createdAt" column="created_at"/>
+		<result property="updatedAt" column="updated_at"/>
+		<result property="itemId" column="item_id"/>
+		<result property="poId" column="po_id"/>
+		<result property="receiptId" column="receipt_id"/>
+		<result property="packUnit" column="pack_unit"/>
+		<result property="packName" column="pack_name"/>
+		<result property="supplierId" column="supplier_id"/>
+		<result property="l2Name" column="l2_name"/>
+		<result property="l2Unit" column="l2_unit"/>
+		<result property="unitName" column="unit_name"/>
+		<result property="code" column="code"/>
+	</resultMap>
+	<resultMap id="ItemAndSupplierMap" type="ItemAndSupplierRelation">
+		<result property="itemId" column="item_id"/>
+		<result property="supplierId" column="supplier_id"/>
+	</resultMap>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="StockLot">
+		insert into stock_lot (
+			lot_id,sku_id,serial_no,in_date,product_date,expire_date,
+			created_at,updated_at,po_id,item_id,receipt_id,pack_unit,pack_name,supplier_id,
+			l2_name,l2_unit,unit_name,code
+    	) values (
+			#{lotId},#{skuId},#{serialNo},#{inDate},#{productDate},#{expireDate},
+			#{createdAt},#{updatedAt},#{poId},#{itemId},#{receiptId},#{packUnit},#{packName},#{supplierId},
+			#{l2Name},#{l2Unit},#{unitName},#{code}
+    	)
+	</insert>
+
+	<update id="update" parameterType="StockLot">
+		update stock_lot
+    	<set>
+  			<if test="lotId != null">lot_id=#{lotId},</if>
+  			<if test="skuId != null">sku_id=#{skuId},</if>
+  			<if test="serialNo != null">serial_no=#{serialNo},</if>
+  			<if test="inDate != null">in_date=#{inDate},</if>
+  			<if test="productDate != null">product_date=#{productDate},</if>
+  			<if test="expireDate != null">expire_date=#{expireDate},</if>
+  			<if test="createdAt != null">created_at=#{createdAt},</if>
+  			<if test="updatedAt != null">updated_at=#{updatedAt},</if>
+			<if test="itemId != null">item_id=#{itemId},</if>
+			<if test="poId != null">po_id=#{poId},</if>
+			<if test="receiptId != null">receipt_id=#{receiptId},</if>
+			<if test="packUnit != null">pack_unit=#{packUnit},</if>
+			<if test="packName != null">pack_name=#{packName},</if>
+			<if test="supplierId !=null">supplier_id=#{supplierId},</if>
+			<if test="l2Name != null">l2_name=#{l2Name},</if>
+			<if test="l2Unit != null">l2_unit=#{l2Unit},</if>
+			<if test="unitName != null">unit_name=#{unitName},</if>
+			<if test="code != null">code=#{code}</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="getStockLotByLotId" parameterType="long" resultMap="stockLotResultMap">
+		select * from stock_lot
+		where lot_id=#{lotId}
+	</select>
+
+	<select id="getStockLotById" parameterType="int" resultMap="stockLotResultMap">
+		select * from stock_lot
+		where ID=#{id}
+	</select>
+
+	<select id="countStockLot" parameterType="map" resultType="int">
+		select count(*) from stock_lot
+		<include refid="queryCondition"/>
+	</select>
+
+	<select id="getStockLotList" parameterType="map" resultMap="stockLotResultMap">
+		select * from stock_lot
+		<include refid="queryCondition"/>
+		<if test="start != null and limit != null">
+		limit #{start},#{limit}
+		</if>
+	</select>
+
+	<select id="getSupplierIdOrItemId" parameterType="map" resultMap="ItemAndSupplierMap">
+		select DISTINCT item_id,supplier_id from stock_lot
+		<where>
+			<if test="supplierList != null">
+				supplier_id in
+				<foreach collection="supplierList"  item="item" index="index" open="(" separator=","  close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="itemList != null">
+				item_id in
+				<foreach collection="itemList"  item="item" index="index" open="(" separator=","  close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<sql id="queryCondition">
+		<where>
+			<if test="id != null">id=#{id}</if>
+			<if test="lotId != null">and lot_id=#{lotId}</if>
+			<if test="skuId != null">and sku_id=#{skuId}</if>
+			<if test="serialNo != null">and serial_no=#{serialNo}</if>
+			<if test="inDate != null">and in_date=#{inDate}</if>
+			<if test="productDate != null">and product_date=#{productDate}</if>
+			<if test="expireDate != null">and expire_date=#{expireDate}</if>
+			<if test="createdAt != null">and created_at=#{createdAt}</if>
+			<if test="updatedAt != null">and updated_at=#{updatedAt}</if>
+			<if test="itemId != null">and item_id=#{itemId}</if>
+			<if test="poId != null">and po_id=#{poId}</if>
+			<if test="receiptId != null">and receipt_id=#{receiptId}</if>
+			<if test="packUnit != null">and pack_unit=#{packUnit}</if>
+			<if test="packName != null">and pack_name=#{packName}</if>
+			<if test="supplierId !=null"> and supplier_id=#{supplierId}</if>
+			<if test="l2Name != null">and l2_name=#{l2Name}</if>
+			<if test="l2Unit != null">and l2_unit=#{l2Unit}</if>
+			<if test="unitName != null">and unit_name=#{unitName}</if>
+			<if test="code != null">and code=#{code}</if>
+		</where>
+	</sql>
+
+</mapper>

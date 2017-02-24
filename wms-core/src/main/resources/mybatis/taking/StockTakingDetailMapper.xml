@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lsh.wms.core.dao.taking.StockTakingDetailDao" >
+
+	<resultMap id="stockTakingDetailResultMap" type="StockTakingDetail">
+		<id property="id" column="id"/>
+		<result property="takingId" column="taking_id"/>
+		<result property="detailId" column="detail_id"/>
+		<result property="round" column="round"/>
+		<result property="realQty" column="real_qty"/>
+		<result property="theoreticalQty" column="theoretical_qty"/>
+		<result property="containerId" column="container_id"/>
+		<result property="lotId" column="lot_id"/>
+		<result property="skuId" column="sku_id"/>
+		<result property="realSkuId" column="real_sku_id"/>
+		<result property="locationId" column="location_id"/>
+		<result property="operator" column="operator"/>
+		<result property="createdAt" column="created_at"/>
+		<result property="updatedAt" column="updated_at"/>
+		<result property="taskId" column="task_id"/>
+		<result property="itemId" column="item_id"/>
+		<result property="realItemId" column="real_item_id"/>
+		<result property="ownerId" column="owner_id"/>
+		<result property="isValid" column="is_valid"/>
+		<result property="packUnit" column="pack_unit"/>
+		<result property="packName" column="pack_name"/>
+		<result property="zoneId" column="zone_id"/>
+		<result property="price" column="price"/>
+		<result property="differencePrice" column="difference_price"/>
+		<result property="barcode" column="barcode"/>
+		<result property="locationCode" column="location_code"/>
+		<result property="skuCode" column="sku_code"/>
+		<result property="packCode" column="pack_code"/>
+		<result property="umoQty" column="umo_qty"/>
+		<result property="skuName" column="sku_name"/>
+		<result property="status" column="status"/>
+		<result property="isFinal" column="is_final"/>
+		<result property="refTaskType" column="ref_task_type"/>
+	</resultMap>
+  
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="StockTakingDetail">
+		insert into stock_taking_detail (
+			taking_id,detail_id,round,real_qty,theoretical_qty,container_id,
+			lot_id,sku_id,real_sku_id,location_id,operator,created_at,updated_at,task_id,item_id,real_item_id,owner_id,is_valid,
+			pack_unit,pack_name,is_final,status,zone_id,price,difference_price,barcode,sku_code,sku_name,location_code,ref_task_type,pack_code,umo_qty
+    	) values (
+			#{takingId},#{detailId},#{round},#{realQty},#{theoreticalQty},#{containerId},
+			#{lotId},#{skuId},#{realSkuId},#{locationId},#{operator},#{createdAt},
+			#{updatedAt},#{taskId},#{itemId},#{realItemId},#{ownerId},#{isValid},#{packUnit},#{packName},#{isFinal},#{status},#{zoneId},
+			#{price},#{differencePrice},#{barcode},#{skuCode},#{skuName},#{locationCode},#{refTaskType},#{packCode},#{umoQty}
+    	)
+	</insert>
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into stock_taking_detail (
+		taking_id,detail_id,round,real_qty,theoretical_qty,container_id,
+		lot_id,sku_id,real_sku_id,location_id,operator,created_at,
+		updated_at,task_id,item_id,real_item_id,owner_id,is_valid,pack_unit,pack_name,is_final,status,zone_id,
+		price,difference_price,barcode,sku_code,sku_name,location_code,pack_code,umo_qty
+		) values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(#{item.takingId},#{item.detailId},#{item.round},#{item.realQty},#{item.theoreticalQty},#{item.containerId},
+			#{item.lotId},#{item.skuId},#{item.realSkuId},#{item.locationId},#{item.operator},#{item.createdAt},
+			#{item.updatedAt},#{item.taskId},#{item.itemId},#{item.realItemId},#{item.ownerId},#{item.isValid},#{item.packUnit},#{item.packName},#{item.isFinal},#{item.status},#{item.zoneId},
+			#{item.price},#{item.differencePrice},#{item.barcode},#{item.skuCode},#{item.skuName},#{item.locationCode},#{item.refTaskType},#{item.packCode},#{item.umoQty}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="StockTakingDetail">
+		update stock_taking_detail
+    	<set>
+  			<if test="takingId != null">taking_id=#{takingId},</if>
+  			<if test="detailId != null">detail_id=#{detailId},</if>
+  			<if test="round != null">round=#{round},</if>
+  			<if test="realQty != null">real_qty=#{realQty},</if>
+  			<if test="theoreticalQty != null">theoretical_qty=#{theoreticalQty},</if>
+  			<if test="containerId != null">container_id=#{containerId},</if>
+  			<if test="lotId != null">lot_id=#{lotId},</if>
+  			<if test="skuId != null">sku_id=#{skuId},</if>
+  			<if test="realSkuId != null">real_sku_id=#{realSkuId},</if>
+  			<if test="locationId != null">location_id=#{locationId},</if>
+  			<if test="operator != null">operator=#{operator},</if>
+  			<if test="createdAt != null">created_at=#{createdAt},</if>
+  			<if test="updatedAt != null">updated_at=#{updatedAt},</if>
+			<if test="taskId != null">task_id=#{taskId},</if>
+			<if test="itemId !=null">item_id=#{itemId},</if>
+			<if test="realItemId !=null">real_item_id=#{realItemId},</if>
+			<if test="ownerId !=null">owner_id=#{ownerId},</if>
+			<if test="isValid !=null">is_valid=#{isValid},</if>
+			<if test="packUnit !=null">pack_unit=#{packUnit},</if>
+			<if test="packName !=null">pack_name=#{packName},</if>
+			<if test="status !=null">status=#{status},</if>
+			<if test="zoneId !=null">zone_id=#{zoneId},</if>
+			<if test="price !=null">price=#{price},</if>
+			<if test="differencePrice !=null">difference_price=#{differencePrice},</if>
+			<if test="barcode !=null">barcode=#{barcode},</if>
+			<if test="skuCode !=null">sku_code=#{skuCode},</if>
+			<if test="skuName !=null">sku_name=#{skuName},</if>
+			<if test="locationCode !=null">location_code=#{locationCode},</if>
+			<if test="isFinal !=null">is_final=#{isFinal},</if>
+			<if test="umoQty !=null">umo_qty=#{umoQty},</if>
+			<if test="packCode !=null">pack_code=#{packCode},</if>
+			<if test="refTaskType !=null">ref_task_type=#{refTaskType}</if>
+		</set>
+		where id=#{id}
+	</update>
+  
+	<select id="getStockTakingDetailById" parameterType="int" resultMap="stockTakingDetailResultMap">
+		select * from stock_taking_detail
+		where ID=#{id} 
+	</select>
+  
+	<select id="countStockTakingDetail" parameterType="map" resultType="int">
+		select count(*) from stock_taking_detail
+		<include refid="queryCondition"/>
+	</select>
+	<select id="getDiffPrice" parameterType="map" resultType="double">
+		select sum(difference_price) from stock_taking_detail
+		<include refid="queryCondition"/>
+	</select>
+	<select id="getAllPrice" parameterType="map" resultType="double">
+		select sum(price * theoretical_qty) from stock_taking_detail
+		<include refid="queryCondition"/>
+	</select>
+  
+	<select id="getStockTakingDetailList" parameterType="map" resultMap="stockTakingDetailResultMap">
+		select * from stock_taking_detail
+		<include refid="queryCondition"/>
+		<if test="start != null and limit != null">
+		limit #{start},#{limit}
+		</if>
+	</select>
+
+	<select id="getStockTakingItemList" parameterType="map" resultMap="stockTakingDetailResultMap">
+		select item_id,barcode,sku_code,sku_name,pack_name,
+		sum(real_qty + umo_qty * pack_unit) as real_qty,price,sum(difference_price) as difference_price,sum(theoretical_qty) as theoretical_qty
+		from stock_taking_detail
+		<include refid="queryCondition"/>
+		group by item_id
+	</select>
+	<select id="conutStockTakingItemList" parameterType="map" resultType="int">
+		select count( distinct item_id)
+		from stock_taking_detail
+		<include refid="queryCondition"/>
+	</select>
+  
+	<sql id="queryCondition">
+		<where>
+			<if test="id != null">id=#{id}</if>
+			<if test="takingId != null">and taking_id=#{takingId}</if>
+			<if test="detailId != null">and detail_id=#{detailId}</if>
+			<if test="round != null">and round=#{round}</if>
+			<if test="detailList != null">
+				and detail_id in
+				<foreach collection="detailList"  item="item" index="index" open="(" separator=","  close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="realQty != null">and real_qty=#{realQty}</if>
+			<if test="theoreticalQty != null">and theoretical_qty=#{theoreticalQty}</if>
+			<if test="containerId != null">and container_id=#{containerId}</if>
+			<if test="lotId != null">and lot_id=#{lotId}</if>
+			<if test="skuId != null">and sku_id=#{skuId}</if>
+			<if test="realSkuId != null">and real_sku_id=#{realSkuId}</if>
+			<if test="locationId != null">and location_id=#{locationId}</if>
+			<if test="operator != null">and operator=#{operator}</if>
+			<if test="createdAt != null">and created_at=#{createdAt}</if>
+			<if test="updatedAt != null">and updated_at=#{updatedAt}</if>
+			<if test="taskId != null and taskId != 0"> and task_id=#{taskId}</if>
+			<if test="itemId !=null"> and item_id=#{itemId}</if>
+			<if test="realItemId !=null"> and real_item_id=#{realItemId}</if>
+			<if test="ownerId !=null"> and owner_id=#{ownerId}</if>
+			<if test="isValid !=null"> and is_valid=#{isValid}</if>
+			<if test="packUnit !=null"> and pack_unit=#{packUnit}</if>
+			<if test="packName !=null"> and pack_name=#{packName}</if>
+			<if test="isFinal !=null"> and is_final=#{isFinal}</if>
+			<if test="status !=null"> and status=#{status}</if>
+			<if test="zoneId !=null"> and zone_id=#{zoneId}</if>
+			<if test="price !=null"> and price=#{price}</if>
+			<if test="differencePrice !=null"> and difference_price=#{differencePrice}</if>
+			<if test="barcode !=null"> and barcode=#{barcode}</if>
+			<if test="skuCode !=null"> and sku_code=#{skuCode}</if>
+			<if test="skuName !=null"> and sku_name=#{skuName}</if>
+			<if test="packCode !=null"> and pack_code=#{packCode}</if>
+			<if test="umoQty !=null"> and umo_qty=#{umoQty}</if>
+			<if test="refTaskType !=null"> and ref_task_type=#{refTaskType}</if>
+			<if test="locationCode !=null"> and location_code=#{locationCode}</if>
+			<if test="skuCodeSearch != null">and sku_code like CONCAT('%',#{skuCodeSearch},'%' )</if>
+			<if test="valid !=null"> and status in (1,2,3)</if>
+			<if test="doingTask !=null"> and status in (1,2)</if>
+			<if test="validItem !=null"> and item_id !=0 </if>
+			<if test="endTime != null">and updated_at&lt;=#{endTime}</if>
+			<if test="beginTime != null">and updated_at&gt;=#{beginTime}</if>
+			<if test="validData != null">
+				and (status=3 or (status=4 and is_final=1))
+			</if>
+		</where>
+	</sql>
+   
+</mapper>

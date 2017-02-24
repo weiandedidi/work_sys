@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lsh.wms.core.dao.seed.SeedingTaskHeadDao" >
+
+	<resultMap id="seedingTaskHeadResultMap" type="SeedingTaskHead">
+		<id property="id" column="id"/>
+		<result property="taskId" column="task_id"/>
+		<result property="storeNo" column="store_no"/>
+		<result property="orderId" column="order_id"/>
+		<result property="createdAt" column="created_at"/>
+		<result property="updatedAt" column="updated_at"/>
+		<result property="requireQty" column="require_qty"/>
+		<result property="realContainerId" column="real_container_id"/>
+		<result property="packUnit" column="pack_unit"/>
+		<result property="ibdDetailId" column="ibd_detail_id"/>
+		<result property="obdDetailId" column="obd_detail_id"/>
+		<result property="isUseExceptionCode" column="is_use_exception_code"/>
+		<result property="orderId" column="order_id"/>
+		<result property="status" column="status"/>
+		<result property="skuId" column="sku_id"/>
+		<result property="storeType" column="store_type"/>
+		<result property="taskOrder" column="task_order"/>
+	</resultMap>
+  
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="SeedingTaskHead">
+		insert into seeding_task_head (
+			task_id,store_no,created_at,updated_at,require_qty,real_container_id,pack_unit,order_id,is_use_exception_code,ibd_detail_id,status,store_type,sku_id,obd_detail_id,task_order
+    	) values (
+			#{taskId},#{storeNo},#{createdAt},#{updatedAt},#{requireQty},#{realContainerId},#{packUnit},#{orderId},#{isUseExceptionCode},#{ibdDetailId},#{status},#{storeType},#{skuId},#{obdDetailId},#{taskOrder}
+    	)
+	</insert>
+
+	<update id="update" parameterType="SeedingTaskHead">
+		update seeding_task_head
+    	<set>
+  			<if test="taskId != null">task_id=#{taskId},</if>
+  			<if test="storeNo != null">store_no=#{storeNo},</if>
+  			<if test="createdAt != null">created_at=#{createdAt},</if>
+  			<if test="updatedAt != null">updated_at=#{updatedAt},</if>
+  			<if test="requireQty != null">require_qty=#{requireQty},</if>
+			<if test="realContainerId != null">real_container_id=#{realContainerId},</if>
+			<if test="packUnit != null">pack_unit=#{packUnit},</if>
+			<if test="orderId != null">order_id=#{orderId},</if>
+			<if test="ibdDetailId != null">ibd_detail_id=#{ibdDetailId},</if>
+			<if test="obdDetailId != null">obd_detail_id=#{obdDetailId},</if>
+			<if test="status != null">status=#{status},</if>
+			<if test="storeType != null">store_type=#{storeType},</if>
+			<if test="skuId != null">sku_id=#{skuId},</if>
+			<if test="taskOrder != null">task_order=#{taskOrder},</if>
+			<if test="isUseExceptionCode != null">is_use_exception_code=#{isUseExceptionCode}</if>
+		</set>
+		where id=#{id}
+	</update>
+  
+	<select id="getSeedingTaskHeadById" parameterType="long" resultMap="seedingTaskHeadResultMap">
+		select * from seeding_task_head
+		where ID=#{id} 
+	</select>
+
+	<select id="getSeedingTaskHeadByTaskId" parameterType="long" resultMap="seedingTaskHeadResultMap">
+		select * from seeding_task_head
+		where task_id=#{taskId}
+	</select>
+
+	<select id="countSeedingTaskHead" parameterType="map" resultType="int">
+		select count(*) from seeding_task_head
+		<include refid="queryCondition"/>
+	</select>
+	<select id="countDistinctTaskHead" parameterType="map" resultType="int">
+		select count(distinct store_no,real_container_id,is_use_exception_code) from seeding_task_head
+		<include refid="queryCondition"/>
+	</select>
+  
+	<select id="getSeedingTaskHeadList" parameterType="map" resultMap="seedingTaskHeadResultMap">
+		select * from seeding_task_head
+		<include refid="queryCondition"/>
+		<if test=" 'taskOrder'.equals(orderBy)  and  'asc'.equals(orderType)">
+			ORDER BY  task_order ASC
+		</if>
+		<if test=" 'taskOrder'.equals(orderBy)  and  'desc'.equals(orderType)">
+			ORDER BY  task_order DESC
+		</if>
+		<if test="start != null and limit != null">
+		limit #{start},#{limit}
+		</if>
+	</select>
+	<select id="getDistinctTaskHeadList" parameterType="map" resultMap="seedingTaskHeadResultMap">
+		select distinct store_no,real_container_id,is_use_exception_code from seeding_task_head
+		<include refid="queryCondition"/>
+		<if test="start != null and limit != null">
+			limit #{start},#{limit}
+		</if>
+	</select>
+  
+	<sql id="queryCondition">
+		<where>
+			<if test="id != null">id=#{id}</if>
+			<if test="taskId != null">and task_id=#{taskId}</if>
+			<if test="storeNo != null">and store_no=#{storeNo}</if>
+			<if test="createdAt != null">and created_at=#{createdAt}</if>
+			<if test="updatedAt != null">and updated_at=#{updatedAt}</if>
+			<if test="requireQty != null">and require_qty=#{requireQty}</if>
+			<if test="realContainerId != null"> and real_container_id=#{realContainerId}</if>
+			<if test="packUnit != null">and pack_unit=#{packUnit}</if>
+			<if test="orderId != null">and order_id=#{orderId}</if>
+			<if test="isUseExceptionCode != null"> and is_use_exception_code=#{isUseExceptionCode}</if>
+			<if test="ibdDetailId != null"> and ibd_detail_id=#{ibdDetailId}</if>
+			<if test="obdDetailId != null"> and obd_detail_id=#{obdDetailId}</if>
+			<if test="valid != null"> and real_container_id != 0</if>
+			<if test="status != null"> and status=#{status}</if>
+			<if test="skuId != null"> and sku_id=#{skuId}</if>
+			<if test="taskOrder != null"> and task_order=#{taskOrder}</if>
+			<if test="storeType != null"> and store_type=#{storeType}</if>
+		</where>
+	</sql>
+   
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lsh.wms.core.dao.baseinfo.BaseinfoLocationBinDao" >
+
+	<resultMap id="baseinfoLocationBinResultMap" type="BaseinfoLocationBin">
+		<id property="id" column="id"/>
+		<result property="locationId" column="location_id"/>
+		<result property="volume" column="volume"/>
+		<result property="weigh" column="weigh"/>
+		<result property="description" column="description"/>
+		<result property="createdAt" column="created_at"/>
+		<result property="updatedAt" column="updated_at"/>
+		<result property="type" column="type"/>
+		<result property="zoneType" column="zone_type"/>
+		<result property="isValid" column="is_valid"/>
+		<result property="oldVolume" column="old_volume"/>
+		<result property="relLocationId" column="rel_location_id"/>
+	</resultMap>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="BaseinfoLocationBin">
+		insert into baseinfo_location_bin (
+			location_id,volume,weigh,description,created_at,updated_at,
+			type,zone_type,is_valid,old_volume,rel_location_id
+    	) values (
+			#{locationId},#{volume},#{weigh},#{description},#{createdAt},#{updatedAt},
+			#{type},#{zoneType},#{isValid},#{oldVolume},#{relLocationId}
+    	)
+	</insert>
+
+	<update id="update" parameterType="BaseinfoLocationBin">
+		update baseinfo_location_bin
+    	<set>
+  			<if test="locationId != null">location_id=#{locationId},</if>
+  			<if test="volume != null">volume=#{volume},</if>
+  			<if test="weigh != null">weigh=#{weigh},</if>
+  			<if test="description != null">description=#{description},</if>
+  			<if test="createdAt != null">created_at=#{createdAt},</if>
+  			<if test="updatedAt != null">updated_at=#{updatedAt},</if>
+  			<if test="type != null">type=#{type},</if>
+  			<if test="zoneType != null">zone_type=#{zoneType},</if>
+			<if test="isValid != null">is_valid=#{isValid},</if>
+			<if test="oldVolume != null">old_volume=#{oldVolume},</if>
+			<if test="relLocationId != null">rel_location_id=#{relLocationId}</if>
+		</set>
+		where location_id=#{locationId} and is_valid=1
+	</update>
+  
+	<select id="getBaseinfoLocationBinById" parameterType="int" resultMap="baseinfoLocationBinResultMap">
+		select * from baseinfo_location_bin
+		where location_id=#{locationId}
+	</select>
+  
+	<select id="countBaseinfoLocationBin" parameterType="map" resultType="int">
+		select count(*) from baseinfo_location_bin
+		<include refid="queryCondition"/>
+	</select>
+  
+	<select id="getBaseinfoLocationBinList" parameterType="map" resultMap="baseinfoLocationBinResultMap">
+		select * from baseinfo_location_bin
+		<include refid="queryCondition"/>
+		<if test="start != null and limit != null">
+		limit #{start},#{limit}
+		</if>
+	</select>
+  
+	<sql id="queryCondition">
+		<where>
+			<if test="id != null">id=#{id}</if>
+			<if test="locationId != null">and location_id=#{locationId}</if>
+			<if test="volume != null">and volume=#{volume}</if>
+			<if test="weigh != null">and weigh=#{weigh}</if>
+			<if test="description != null">and description=#{description}</if>
+			<if test="createdAt != null">and created_at=#{createdAt}</if>
+			<if test="updatedAt != null">and updated_at=#{updatedAt}</if>
+			<if test="type != null">and type=#{type}</if>
+			<if test="zoneType != null">and zone_type=#{zoneType}</if>
+			<if test="isValid != null">and is_valid=#{isValid}</if>
+			<if test="oldVolume != null">and old_volume=#{oldVolume}</if>
+			<if test="relLocationId != null">and rel_location_id=#{relLocationId}</if>
+		</where>
+	</sql>
+   
+</mapper>
