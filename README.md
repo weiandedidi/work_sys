@@ -1,1 +1,2 @@
+atp的jar包只是引入了sku的entry的，可以删掉新建sku
 仓库管理系统
